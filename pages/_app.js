@@ -1,5 +1,5 @@
+import WalletProvider from "../context/walletContext";
 import "../styles/globals.css";
-import WalletProvider from "contexts/walletContext";
 
 function MyApp({ Component, pageProps }) {
   return (
