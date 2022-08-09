@@ -1,0 +1,18 @@
+.container {
+  margin-top: 2.5rem;
+}
+
+.barWrapper {
+  width: 70%;
+  height: 16px;
+  margin: 0 auto;
+  background-color: #101010;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(to right, #284ca5 0%, #de2424 100%);
+}

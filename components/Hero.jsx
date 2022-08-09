@@ -36,7 +36,16 @@ function Hero() {
           <div id={styles.gry2} />
           <div id={styles.gry3} />
           <div id={styles.gry1} />
-          <div className={styles.card}></div>
+          <div className={styles.card}>
+            <div className={styles.cardLeft}>
+              <h3>Ethereum</h3>
+              <h2>20 HKP</h2>
+              <p>0x8956....CA92</p>
+            </div>
+            <div className={styles.cardRight}>
+              <img src="ethereum-icon.svg" alt="ethereum" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
