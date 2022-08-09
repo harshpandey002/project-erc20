@@ -3,16 +3,53 @@
 }
 
 .barWrapper {
-  width: 70%;
+  position: relative;
+  width: 60%;
   height: 16px;
   margin: 0 auto;
   background-color: #101010;
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .bar {
+  position: relative;
   height: 100%;
-  width: 60%;
+  width: 75%;
+  border-radius: 10px;
   background: linear-gradient(to right, #284ca5 0%, #de2424 100%);
+}
+
+.barInfo {
+  position: absolute;
+  width: max-content;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 300;
+}
+
+#infoRight {
+  right: 101%;
+}
+
+#infoLeft {
+  left: 101%;
+}
+
+#mintMsg {
+  position: absolute;
+  top: 150%;
+  left: 96%;
+  width: max-content;
+  font-weight: 300;
+}
+
+#arrowUp {
+  position: absolute;
+  top: 130%;
+  left: 99%;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #ffffff;
 }
