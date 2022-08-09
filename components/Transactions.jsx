@@ -5,7 +5,7 @@ import { GoLinkExternal } from "react-icons/go";
 export default function Transactions() {
   return (
     <div className={styles.container}>
-      <h2 id={styles.heading}>Transaction Logs</h2>
+      <h2 id="heading">Transaction Logs</h2>
       <div className={styles.content}>
         <Transaction />
         <Transaction />

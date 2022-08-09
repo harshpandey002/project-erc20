@@ -5,7 +5,7 @@ import styles from "@/styles/Minters.module.css";
 export default function Minters() {
   return (
     <div className={styles.container}>
-      <h2 id={styles.heading}>All Minters</h2>
+      <h2 id="heading">All Minters</h2>
       <div className={styles.content}>
         <div id={styles.gry5} />
         <Card />

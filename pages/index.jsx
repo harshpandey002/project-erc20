@@ -1,3 +1,4 @@
+import BurnToken from "@/components/BurnToken";
 import Minters from "@/components/Minters";
 import MintInfo from "@/components/MintInfo";
 import Navbar from "@/components/Navbar";
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <MintInfo />
       <Minters />
+      <BurnToken />
       <Transactions />
     </div>
   );

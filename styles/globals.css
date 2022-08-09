@@ -88,6 +88,14 @@ input::-webkit-inner-spin-button {
   transform: scale(1.4) rotate(-5deg);
 }
 
+#heading {
+  font-weight: 300;
+  color: #c3c3c3;
+  margin: 0 auto;
+  width: max-content;
+  font-size: 28px;
+}
+
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
