@@ -3,7 +3,6 @@
   flex-direction: column;
   gap: 5rem;
   align-items: center;
-  padding: 2rem;
   position: relative;
 }
 
@@ -33,7 +32,7 @@
 }
 
 .heading {
-  margin-top: 3rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;

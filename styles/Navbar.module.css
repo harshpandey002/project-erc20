@@ -1,0 +1,27 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  z-index: 2;
+}
+
+.logo h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  font-size: 20px;
+  font-weight: 300;
+  color: white;
+}
+
+.links li {
+  cursor: pointer;
+}
