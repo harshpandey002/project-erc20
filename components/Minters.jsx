@@ -7,6 +7,7 @@ export default function Minters() {
     <div className={styles.container}>
       <h2 id={styles.heading}>All Minters</h2>
       <div className={styles.content}>
+        <div id={styles.gry5} />
         <Card />
         <Card />
         <Card />

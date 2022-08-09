@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "@/styles/Transactions.module.css";
+import { GoLinkExternal } from "react-icons/go";
 
 export default function Transactions() {
   return (
@@ -11,6 +12,10 @@ export default function Transactions() {
         <Transaction />
         <Transaction />
       </div>
+      <a href="#" className={styles.contract}>
+        View Smart Contract on Etherscan
+        <GoLinkExternal />
+      </a>
     </div>
   );
 }
@@ -25,6 +30,7 @@ function Transaction() {
       </p>
       <a href="#" className={styles.link}>
         View on Block Explorer
+        <GoLinkExternal />
       </a>
     </div>
   );
