@@ -5,6 +5,7 @@ const balanceSchema = mongoose.Schema(
     address: {
       type: String,
       required: true,
+      unique: true,
     },
     token: {
       type: Number,

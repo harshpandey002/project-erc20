@@ -1,22 +1,26 @@
 import React from "react";
 import styles from "@/styles/MintInfo.module.css";
+import { useWalletContext } from "context/walletContext";
 
 export default function MintInfo() {
+  const { contractState } = useWalletContext();
+  const { totalSupply, maxSupply } = contractState;
+
   return (
     <div className={styles.container}>
       <div className={styles.barWrapper}>
-        {/* // TODO Integrate */}
         <p className={styles.barInfo} id={styles.infoRight}>
-          100 Minted
+          {totalSupply} Minted
         </p>
-        <div className={styles.bar}>
+        <div
+          className={styles.bar}
+          style={{ width: (totalSupply / maxSupply) * 100 + "%" }}
+        >
           <span id={styles.arrowUp} />
-          {/* // TODO Integrate */}
-          <p id={styles.mintMsg}>50 Left</p>
+          <p id={styles.mintMsg}>{maxSupply - totalSupply} Left</p>
         </div>
-        {/* // TODO Integrate */}
         <p className={styles.barInfo} id={styles.infoLeft}>
-          150 Max Supply
+          {maxSupply} Max Supply
         </p>
       </div>
     </div>
