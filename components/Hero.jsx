@@ -2,8 +2,17 @@
 import React from "react";
 import styles from "@/styles/Hero.module.css";
 import TransactionComponent from "./TransactionComponent";
+import { useWalletContext } from "context/walletContext";
+import { formatAddress } from "@/helpers/constants";
 
 function Hero() {
+  const { isWalletConnected, account, connectWallet } = useWalletContext();
+
+  console.log({
+    isWalletConnected,
+    account,
+    connectWallet,
+  });
   return (
     <div className={styles.container}>
       <div className={styles.blueBlob} />
@@ -21,15 +30,19 @@ function Hero() {
           mollitia possimus voluptatibus consectetur dolore, et sit veritatis
           corrupti eaque laudantium, delectus aliquam?
         </p>
-        {/* <button className="btn-hero">
-          <img id="walletIcon" src="metamask-icon.svg" alt="hey" />
-          Connect Wallet
-        </button> */}
+        {!isWalletConnected && (
+          <button onClick={connectWallet} className="btn-hero">
+            <img id="walletIcon" src="metamask-icon.svg" alt="hey" />
+            Connect Wallet
+          </button>
+        )}
       </div>
       <div className={styles.content}>
-        <div className={styles.form}>
-          <TransactionComponent />
-        </div>
+        {isWalletConnected && (
+          <div className={styles.form}>
+            <TransactionComponent />
+          </div>
+        )}
         <div className={styles.cardContainer}>
           {/* // TODO Integrate */}
           <div id={styles.gry5} />
@@ -41,7 +54,11 @@ function Hero() {
             <div className={styles.cardLeft}>
               <h3>Ethereum</h3>
               <h2>0 HKP</h2>
-              <p>Connect you wallet</p>
+              <p>
+                {isWalletConnected
+                  ? formatAddress(account)
+                  : "Connect you wallet"}
+              </p>
             </div>
             <div className={styles.cardRight}>
               <img src="ethereum-icon.svg" alt="ethereum" />

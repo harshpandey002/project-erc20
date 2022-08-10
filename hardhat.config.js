@@ -16,12 +16,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.9",
   networks: {
-    mumbai: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/z2JSlvGT7ohIHkYOBkMrpzObp6p9Pe3N",
+    goerli: {
+      url: process.env.POLYGON_URL,
       accounts: [`0x${process.env.PRIVATE_KEY}`],
     },
   },
   etherscan: {
-    apiKey: process.env.POLYGONSCAN_API_KEY,
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
