@@ -12,21 +12,21 @@ contract HKPtoken is ERC20, ERC20Burnable {
 
     constructor() ERC20("HKPtoken", "HKP") {
          tokenPrice = 10000000000000000;
-         maxSupply = 150;
+         maxSupply = 150000000000000000000;
          owner = msg.sender;
     }
 
     function mint(uint amount) public payable{
-        require(totalSupply() + amount < maxSupply * 10 ** decimals(), "Exceeding max supply");
+        require(totalSupply() + amount < maxSupply, "Exceeding max supply");
         require(msg.value * 10 ** decimals() / amount >= tokenPrice, "Pay Ether according to Token Price");
         _mint(msg.sender, amount);
     }
 
-    function setTokenPrice(uint _tokenPrice) public {
+    function setTokenPrice(uint _tokenPrice) public{
         tokenPrice = _tokenPrice;
     }
 
-    function setMaxSupply(uint _amount) public {
+    function setMaxSupply(uint _amount) public{
         maxSupply= _amount;
     }
 

@@ -7,10 +7,25 @@ import { contractABI, contractAddress } from "@/helpers/constants";
 export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
 
+// ! createEthereumContract()
+const createEthereumContract = () => {
+  const provider = new ethers.providers.Web3Provider(ethereum);
+  const signer = provider.getSigner();
+  const transactionsContract = new ethers.Contract(
+    contractAddress,
+    contractABI,
+    signer
+  );
+
+  return transactionsContract;
+};
+
 function WalletProvider({ children }) {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [account, setAccount] = useState(null);
+  const [contractState, setContractState] = useState({});
 
+  // ! checkConnection()
   const checkConnection = async () => {
     const { ethereum } = window;
     if (!ethereum) return;
@@ -22,6 +37,7 @@ function WalletProvider({ children }) {
     setAccount(accounts[0]);
   };
 
+  // ! connectWallet()
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -42,15 +58,48 @@ function WalletProvider({ children }) {
     }
   };
 
+  // ! getContractStates()
+  const getContractStates = async () => {
+    const contractMethods = createEthereumContract();
+
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
+
+    const state = await Promise.all([
+      contractMethods.owner(),
+      contractMethods.totalSupply(),
+      contractMethods.maxSupply(),
+      contractMethods.tokenPrice(),
+      contractMethods.balanceOf(accounts[0]),
+    ]);
+
+    setContractState({
+      owner: state[0],
+      totalSupply: parseFloat(ethers.utils.formatEther(state[1])),
+      maxSupply: parseFloat(ethers.utils.formatEther(state[2])),
+      tokenPrice: ethers.utils.formatEther(state[3]),
+      myBalance: parseFloat(ethers.utils.formatEther(state[4])),
+    });
+  };
+
+  // ! useEffect()
   useEffect(() => {
     checkConnection();
+    const { ethereum } = window;
+    if (!ethereum) return;
+    getContractStates();
   }, []);
 
   const contextValue = {
     isWalletConnected,
     account,
     connectWallet,
+    createEthereumContract,
+    contractState,
   };
+
+  console.log(contractState);
 
   return (
     <walletContext.Provider value={contextValue}>

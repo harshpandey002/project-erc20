@@ -6,13 +6,9 @@ import { useWalletContext } from "context/walletContext";
 import { formatAddress } from "@/helpers/constants";
 
 function Hero() {
-  const { isWalletConnected, account, connectWallet } = useWalletContext();
+  const { isWalletConnected, account, connectWallet, contractState } =
+    useWalletContext();
 
-  console.log({
-    isWalletConnected,
-    account,
-    connectWallet,
-  });
   return (
     <div className={styles.container}>
       <div className={styles.blueBlob} />
@@ -53,7 +49,7 @@ function Hero() {
           <div className={styles.card}>
             <div className={styles.cardLeft}>
               <h3>Ethereum</h3>
-              <h2>0 HKP</h2>
+              <h2>{isWalletConnected ? contractState.myBalance : 0} HKP</h2>
               <p>
                 {isWalletConnected
                   ? formatAddress(account)
