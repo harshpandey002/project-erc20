@@ -7,9 +7,13 @@
   z-index: 2;
 }
 
-.logo h2 {
-  font-size: 24px;
+.logo h1 {
+  font-size: 30px;
   font-weight: 600;
+  background: linear-gradient(to right, #284ca5 0%, #de2424 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .links {

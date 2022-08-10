@@ -21,6 +21,7 @@ export default function Minters() {
 function Card() {
   return (
     <div className={styles.cardContainer}>
+      {/* // TODO Integrate */}
       <div id={styles.gry4} />
       <div id={styles.gry2} />
       <div id={styles.gry3} />

@@ -31,6 +31,7 @@ function Hero() {
           <TransactionComponent />
         </div>
         <div className={styles.cardContainer}>
+          {/* // TODO Integrate */}
           <div id={styles.gry5} />
           <div id={styles.gry4} />
           <div id={styles.gry2} />
@@ -39,8 +40,8 @@ function Hero() {
           <div className={styles.card}>
             <div className={styles.cardLeft}>
               <h3>Ethereum</h3>
-              <h2>20 HKP</h2>
-              <p>0x8956....CA92</p>
+              <h2>0 HKP</h2>
+              <p>Connect you wallet</p>
             </div>
             <div className={styles.cardRight}>
               <img src="ethereum-icon.svg" alt="ethereum" />
