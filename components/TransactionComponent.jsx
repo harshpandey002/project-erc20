@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import styles from "@/styles/TransactionComponent.module.css";
 import { GoLinkExternal } from "react-icons/go";
+import { useWalletContext } from "context/walletContext";
+import { ethers } from "ethers";
+import { formatAddress } from "@/helpers/constants";
+import { toast } from "react-toastify";
 
 export default function TransactionComponent() {
   const [mode, setMode] = useState("mint");
   const [mintAmount, setMintAmount] = useState(0);
+  const { createEthereumContract, contractState, getEventsAndMinters } =
+    useWalletContext();
 
   const handleChange = (e) => {
     if (e.target.value < 0) return;
@@ -24,22 +30,40 @@ export default function TransactionComponent() {
 
   const handleMint = async (e) => {
     e.preventDefault();
+    if (mintAmount == 0) return;
 
-    // const res = await fetch(
-    //   "http://localhost:3000/api/balance?txn=0x32gyh34g",
-    //   {
-    //     method: "PATCH",
-    //   }
-    // );
+    const contractMethods = createEthereumContract();
 
-    const res = await fetch("http://localhost:3000/api/balance");
+    const options = {
+      value: ethers.utils.parseEther(
+        (mintAmount * contractState.tokenPrice).toString()
+      ),
+    };
 
-    const data = await res.json();
-    console.log(data);
+    try {
+      const txn = await contractMethods.mint(
+        ethers.utils.parseEther(mintAmount.toString()),
+        options
+      );
+
+      await fetch(`http://localhost:3000/api/transaction`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          to: txn.to,
+          amount: mintAmount,
+          hash: txn.hash,
+          from: txn.from,
+          method: "Mint",
+        }),
+      });
+
+      getEventsAndMinters();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  // TODO Integrate
-  let ether = (mintAmount * 0.2).toFixed(2);
+  let ether = (mintAmount * contractState.tokenPrice).toFixed(2);
 
   if (mode === "transfer") return <TransferForm setMode={setMode} />;
 
@@ -54,7 +78,7 @@ export default function TransactionComponent() {
         </a>
       </div>
       <div className={styles.mint}>
-        <p>1 HKP Token = 0.2 Goerli Ether</p>
+        <p>1 HKP Token = {contractState.tokenPrice} Goerli Ether</p>
         <div className={styles.input}>
           <button onClick={handleDecrement} type="button">
             -
@@ -82,14 +106,42 @@ export default function TransactionComponent() {
 function TransferForm({ setMode }) {
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState();
+  const { createEthereumContract, getEventsAndMinters, account } =
+    useWalletContext();
 
   const handleChange = (e) => {
     if (e.target.value < 0) return;
     setAmount(e.target.value);
   };
 
-  const handleTransfer = (e) => {
+  const handleTransfer = async (e) => {
     e.preventDefault();
+    if (!amount) return;
+
+    const contractMethods = createEthereumContract();
+
+    try {
+      const txn = await contractMethods.transfer(
+        to,
+        ethers.utils.parseEther(amount.toString())
+      );
+
+      await fetch(`http://localhost:3000/api/transaction`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          to: to,
+          amount: parseInt(amount),
+          hash: txn.hash,
+          from: txn.from,
+          method: "Transfer",
+        }),
+      });
+
+      getEventsAndMinters();
+    } catch (error) {
+      console.log(error);
+      toast.error("Please Enter a valid address");
+    }
   };
 
   return (
@@ -104,8 +156,7 @@ function TransferForm({ setMode }) {
         </a>
       </div>
       <div className={styles.transfer}>
-        {/* // TODO Integrate */}
-        <p>From 0x8956....CA92</p>
+        <p>From {formatAddress(account)}</p>
         <input
           value={to}
           onChange={(e) => setTo(e.target.value)}

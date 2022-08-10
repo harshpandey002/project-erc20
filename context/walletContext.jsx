@@ -9,13 +9,27 @@ export const useWalletContext = () => useContext(walletContext);
 
 // ! createEthereumContract()
 const createEthereumContract = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const transactionsContract = new ethers.Contract(
-    contractAddress,
-    contractABI,
-    signer
-  );
+  let transactionsContract = null;
+  let provider = null;
+
+  const { ethereum } = window;
+
+  if (ethereum) {
+    provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    transactionsContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      signer
+    );
+  } else {
+    provider = new ethers.providers.EtherscanProvider("goerli");
+    transactionsContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      provider
+    );
+  }
 
   return transactionsContract;
 };
@@ -24,6 +38,8 @@ function WalletProvider({ children }) {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [account, setAccount] = useState(null);
   const [contractState, setContractState] = useState({});
+  const [events, setEvents] = useState([]);
+  const [minters, setMinters] = useState([]);
 
   // ! checkConnection()
   const checkConnection = async () => {
@@ -62,33 +78,54 @@ function WalletProvider({ children }) {
   const getContractStates = async () => {
     const contractMethods = createEthereumContract();
 
-    const accounts = await ethereum.request({
+    const { ethereum } = window;
+
+    const accounts = await ethereum?.request({
       method: "eth_requestAccounts",
     });
 
-    const state = await Promise.all([
-      contractMethods.owner(),
-      contractMethods.totalSupply(),
-      contractMethods.maxSupply(),
-      contractMethods.tokenPrice(),
-      contractMethods.balanceOf(accounts[0]),
-    ]);
+    let state = null;
+
+    if (ethereum) {
+      state = await Promise.all([
+        contractMethods.totalSupply(),
+        contractMethods.maxSupply(),
+        contractMethods.tokenPrice(),
+        contractMethods.balanceOf(accounts[0]),
+      ]);
+    } else {
+      state = await Promise.all([
+        contractMethods.totalSupply(),
+        contractMethods.maxSupply(),
+        contractMethods.tokenPrice(),
+      ]);
+    }
 
     setContractState({
-      owner: state[0],
-      totalSupply: parseFloat(ethers.utils.formatEther(state[1])),
-      maxSupply: parseFloat(ethers.utils.formatEther(state[2])),
-      tokenPrice: ethers.utils.formatEther(state[3]),
-      myBalance: parseFloat(ethers.utils.formatEther(state[4])),
+      totalSupply: parseFloat(ethers.utils.formatEther(state[0])),
+      maxSupply: parseFloat(ethers.utils.formatEther(state[1])),
+      tokenPrice: ethers.utils.formatEther(state[2]),
+      myBalance: ethereum ? parseFloat(ethers.utils.formatEther(state[3])) : 0,
     });
+  };
+
+  const getEventsAndMinters = async () => {
+    const res = await fetch("http://localhost:3000/api/transaction");
+    const data = await res.json();
+
+    setEvents(data.events);
+    setMinters(data.minters);
   };
 
   // ! useEffect()
   useEffect(() => {
     checkConnection();
-    const { ethereum } = window;
-    if (!ethereum) return;
     getContractStates();
+  }, []);
+
+  // ! useEffect()
+  useEffect(() => {
+    getEventsAndMinters();
   }, []);
 
   const contextValue = {
@@ -96,10 +133,12 @@ function WalletProvider({ children }) {
     account,
     connectWallet,
     createEthereumContract,
+    getContractStates,
     contractState,
+    getEventsAndMinters,
+    events,
+    minters,
   };
-
-  console.log(contractState);
 
   return (
     <walletContext.Provider value={contextValue}>
