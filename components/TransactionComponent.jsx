@@ -22,8 +22,20 @@ export default function TransactionComponent() {
     setMintAmount(mintAmount + 1);
   };
 
-  const handleMint = (e) => {
+  const handleMint = async (e) => {
     e.preventDefault();
+
+    // const res = await fetch(
+    //   "http://localhost:3000/api/balance?txn=0x32gyh34g",
+    //   {
+    //     method: "PATCH",
+    //   }
+    // );
+
+    const res = await fetch("http://localhost:3000/api/balance");
+
+    const data = await res.json();
+    console.log(data);
   };
 
   // TODO Integrate
