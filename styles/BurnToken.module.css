@@ -5,7 +5,8 @@
   margin-top: 5rem;
 }
 
-.content {
+.content,
+.message {
   margin-top: 2rem;
   height: 80vh;
   max-height: 280px;
@@ -36,4 +37,38 @@
   font-size: 20px;
   font-weight: 400;
   color: #222222;
+}
+
+.message {
+  cursor: initial;
+  padding: 3rem 1rem;
+  height: max-content;
+  max-height: initial;
+  position: relative;
+}
+
+.message p {
+  font-style: italic;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 300;
+}
+
+#burn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  padding: 8px 12px;
+  border: 1px solid #090909;
+  outline: none;
+  border-radius: 3px;
+  background-color: #000000;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.4 ease;
+}
+
+#burn:hover {
+  background-color: #090909;
 }
