@@ -23,7 +23,10 @@ const createEthereumContract = () => {
       signer
     );
   } else {
-    provider = new ethers.providers.EtherscanProvider("goerli");
+    provider = new ethers.providers.EtherscanProvider(
+      "goerli",
+      "2TBC8DFX2KC651Q7XYNIS2GWKA4SX9YPFX"
+    );
     transactionsContract = new ethers.Contract(
       contractAddress,
       contractABI,
@@ -121,11 +124,14 @@ function WalletProvider({ children }) {
   useEffect(() => {
     checkConnection();
     getContractStates();
-  }, []);
-
-  // ! useEffect()
-  useEffect(() => {
     getEventsAndMinters();
+
+    const { ethereum } = window;
+    if (!ethereum) return;
+    window.ethereum.on("accountsChanged", function (accounts) {
+      checkConnection();
+      getContractStates();
+    });
   }, []);
 
   const contextValue = {
