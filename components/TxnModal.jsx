@@ -27,7 +27,7 @@ export default function TxnModal({ modal, setModal }) {
       <div onClick={handleClose} className={styles.overlay} />
       <div className={styles.container}>
         {modal?.loading ? (
-          <p>Transaction Initialized</p>
+          <p>Transaction Initiated</p>
         ) : (
           <p>Transaction Mined</p>
         )}
