@@ -4,6 +4,7 @@ import styles from "@/styles/Hero.module.css";
 import TransactionComponent from "./TransactionComponent";
 import { useWalletContext } from "context/walletContext";
 import { formatAddress } from "@/helpers/constants";
+import Copy from "./Copy";
 
 function Hero() {
   const { isWalletConnected, account, connectWallet, contractState } =
@@ -50,10 +51,11 @@ function Hero() {
             <div className={styles.cardLeft}>
               <h3>Ethereum</h3>
               <h2>{isWalletConnected ? contractState.myBalance : 0} HKP</h2>
-              <p>
+              <p className="address">
                 {isWalletConnected
                   ? formatAddress(account)
                   : "Connect you wallet"}
+                <Copy address={account} />
               </p>
             </div>
             <div className={styles.cardRight}>

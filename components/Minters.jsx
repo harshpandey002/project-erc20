@@ -3,6 +3,7 @@ import React from "react";
 import styles from "@/styles/Minters.module.css";
 import { useWalletContext } from "context/walletContext";
 import { formatAddress } from "@/helpers/constants";
+import Copy from "./Copy";
 
 export default function Minters() {
   const { minters } = useWalletContext();
@@ -32,7 +33,9 @@ function Card({ minter }) {
         <div className={styles.cardLeft}>
           <h3>Ethereum</h3>
           <h2>{minter.token} HKP</h2>
-          <p>{formatAddress(minter.address)}</p>
+          <p className="address">
+            {formatAddress(minter.address)} <Copy address={minter.address} />
+          </p>
         </div>
         <div className={styles.cardRight}>
           <img src="ethereum-icon.svg" alt="ethereum" />

@@ -157,6 +157,21 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.address {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.copyIcon {
+  cursor: pointer;
+  color: #696969;
+}
+
+.copyIcon:hover {
+  color: #0a3e6c;
+}
+
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

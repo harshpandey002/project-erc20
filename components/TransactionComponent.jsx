@@ -5,6 +5,7 @@ import { useWalletContext } from "context/walletContext";
 import { ethers } from "ethers";
 import { formatAddress } from "@/helpers/constants";
 import { toast } from "react-toastify";
+import Copy from "./Copy";
 
 export default function TransactionComponent() {
   const [mode, setMode] = useState("mint");
@@ -98,8 +99,12 @@ export default function TransactionComponent() {
       <div className={styles.header}>
         <span className={styles.selected}>Mint</span>
         <span onClick={() => setMode("transfer")}>Transfer</span>
-        {/* // TODO add Goerli faucet link */}
-        <a href="#" id={styles.faucet}>
+        <a
+          href="https://goerlifaucet.com/"
+          target="_blank"
+          rel="noreferrer"
+          id={styles.faucet}
+        >
           Goerli Faucet <GoLinkExternal />
         </a>
       </div>
@@ -211,14 +216,20 @@ function TransferForm({ setMode }) {
       <div className={styles.header}>
         <span onClick={() => setMode("mint")}>Mint</span>
         <span className={styles.selected}>Transfer</span>
-        <a href="#" id={styles.faucet}>
+        <a
+          href="https://goerlifaucet.com/"
+          target="_blank"
+          rel="noreferrer"
+          id={styles.faucet}
+        >
           Goerli Faucet
-          {/* // TODO add Goerli faucet link */}
           <GoLinkExternal />
         </a>
       </div>
       <div className={styles.transfer}>
-        <p>From {formatAddress(account)}</p>
+        <p className="address">
+          From {formatAddress(account)} <Copy address={account} />{" "}
+        </p>
         <input
           value={to}
           onChange={(e) => setTo(e.target.value)}
