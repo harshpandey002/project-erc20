@@ -3,7 +3,11 @@ import styles from "@/styles/Transactions.module.css";
 import { GoLinkExternal } from "react-icons/go";
 import { ethers } from "ethers";
 import { useWalletContext } from "context/walletContext";
-import { eventColor, formatAddress } from "@/helpers/constants";
+import {
+  contractAddress,
+  eventColor,
+  formatAddress,
+} from "@/helpers/constants";
 import moment from "moment";
 
 export default function Transactions() {
@@ -17,7 +21,12 @@ export default function Transactions() {
           <Transaction key={event._id} event={event} />
         ))}
       </div>
-      <a href="#" className={styles.contract}>
+      <a
+        href={`https://goerli.etherscan.io/address/${contractAddress}`}
+        target="_blank"
+        rel="noreferrer"
+        className={styles.contract}
+      >
         View Smart Contract on Etherscan
         <GoLinkExternal />
       </a>
@@ -38,7 +47,7 @@ function Transaction({ event }) {
         </span>{" "}
         2 HKP Tokens from Smart Contract{" "}
         <span className={styles.timestamp}>
-          {moment(event.createdAt).startOf("hour").fromNow()}
+          {moment(event.createdAt).startOf("minute").fromNow()}
         </span>
       </p>
       <a href="#" className={styles.link}>

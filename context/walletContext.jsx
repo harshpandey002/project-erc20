@@ -3,13 +3,14 @@ import { toast, ToastContainer } from "react-toastify";
 
 import { ethers } from "ethers";
 import { contractABI, contractAddress } from "@/helpers/constants";
+import TxnModal from "@/components/TxnModal";
 
 export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
 
 // ! createEthereumContract()
 const createEthereumContract = () => {
-  let transactionsContract = null;
+  let contractMethods = null;
   let provider = null;
 
   const { ethereum } = window;
@@ -17,24 +18,20 @@ const createEthereumContract = () => {
   if (ethereum) {
     provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    transactionsContract = new ethers.Contract(
-      contractAddress,
-      contractABI,
-      signer
-    );
+    contractMethods = new ethers.Contract(contractAddress, contractABI, signer);
   } else {
     provider = new ethers.providers.EtherscanProvider(
       "goerli",
       "2TBC8DFX2KC651Q7XYNIS2GWKA4SX9YPFX"
     );
-    transactionsContract = new ethers.Contract(
+    contractMethods = new ethers.Contract(
       contractAddress,
       contractABI,
       provider
     );
   }
 
-  return transactionsContract;
+  return contractMethods;
 };
 
 function WalletProvider({ children }) {
@@ -43,6 +40,19 @@ function WalletProvider({ children }) {
   const [contractState, setContractState] = useState({});
   const [events, setEvents] = useState([]);
   const [minters, setMinters] = useState([]);
+  const [modal, setModal] = useState({
+    show: false,
+    method: "",
+    loading: true,
+    txn: "",
+  });
+
+  // ! checkConnection()
+  const getProvider = async () => {
+    const { ethereum } = window;
+    let provider = new ethers.providers.Web3Provider(ethereum);
+    return provider;
+  };
 
   // ! checkConnection()
   const checkConnection = async () => {
@@ -128,7 +138,7 @@ function WalletProvider({ children }) {
 
     const { ethereum } = window;
     if (!ethereum) return;
-    window.ethereum.on("accountsChanged", function (accounts) {
+    window.ethereum.on("accountsChanged", function () {
       checkConnection();
       getContractStates();
     });
@@ -142,8 +152,11 @@ function WalletProvider({ children }) {
     getContractStates,
     contractState,
     getEventsAndMinters,
+    getProvider,
     events,
     minters,
+    modal,
+    setModal,
   };
 
   return (
@@ -157,6 +170,7 @@ function WalletProvider({ children }) {
         pauseOnFocusLoss
         draggable
       />
+      <TxnModal modal={modal} setModal={setModal} />
     </walletContext.Provider>
   );
 }

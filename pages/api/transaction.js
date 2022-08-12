@@ -1,6 +1,7 @@
 import initDB from "@/helpers/initDb";
 import Balances from "@/models/Balances";
 import Events from "@/models/Events";
+import chalk from "chalk";
 
 initDB();
 
@@ -26,10 +27,12 @@ const updateBalance = async (req, res) => {
     toBalance = toBalance[0];
   }
 
-  console.log(toBalance);
+  console.log(chalk.blue(fromBalance));
+  console.log(chalk.red(toBalance));
 
   if (method === "Mint") {
     if (!fromBalance) {
+      console.log(chalk.green(fromBalance));
       await new Balances({
         address: from,
         token: amount,

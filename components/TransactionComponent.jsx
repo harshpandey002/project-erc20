@@ -9,8 +9,14 @@ import { toast } from "react-toastify";
 export default function TransactionComponent() {
   const [mode, setMode] = useState("mint");
   const [mintAmount, setMintAmount] = useState(0);
-  const { createEthereumContract, contractState, getEventsAndMinters } =
-    useWalletContext();
+  const [isCalling, setIsCalling] = useState(false);
+  const {
+    createEthereumContract,
+    contractState,
+    getEventsAndMinters,
+    getContractStates,
+    setModal,
+  } = useWalletContext();
 
   const handleChange = (e) => {
     if (e.target.value < 0) return;
@@ -41,10 +47,27 @@ export default function TransactionComponent() {
     };
 
     try {
+      setIsCalling(true);
       const txn = await contractMethods.mint(
         ethers.utils.parseEther(mintAmount.toString()),
         options
       );
+
+      const tempObj = {
+        show: true,
+        method: "Mint",
+        loading: true,
+        txn: txn.hash,
+      };
+
+      setModal(tempObj);
+
+      await txn.wait();
+
+      setModal({
+        ...tempObj,
+        loading: false,
+      });
 
       await fetch(`http://localhost:3000/api/transaction`, {
         method: "PATCH",
@@ -58,8 +81,11 @@ export default function TransactionComponent() {
       });
 
       getEventsAndMinters();
+      getContractStates();
+      setIsCalling(false);
     } catch (error) {
       console.log(error);
+      setIsCalling(false);
     }
   };
 
@@ -96,7 +122,7 @@ export default function TransactionComponent() {
         <p>{ether} Goerli Ether</p>
       </div>
 
-      <button type="submit" className={styles.submitBtn}>
+      <button disabled={isCalling} type="submit" className={styles.submitBtn}>
         Mint HKP
       </button>
     </form>
@@ -106,8 +132,15 @@ export default function TransactionComponent() {
 function TransferForm({ setMode }) {
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState();
-  const { createEthereumContract, getEventsAndMinters, account } =
-    useWalletContext();
+  const {
+    createEthereumContract,
+    getContractStates,
+    getEventsAndMinters,
+    account,
+    setModal,
+  } = useWalletContext();
+
+  const [isCalling, setIsCalling] = useState(false);
 
   const handleChange = (e) => {
     if (e.target.value < 0) return;
@@ -116,15 +149,36 @@ function TransferForm({ setMode }) {
 
   const handleTransfer = async (e) => {
     e.preventDefault();
-    if (!amount) return;
+    if (amount == 0) {
+      toast.info("Amount cannot be 0");
+      return;
+    }
 
     const contractMethods = createEthereumContract();
 
     try {
+      setIsCalling(true);
+
       const txn = await contractMethods.transfer(
         to,
         ethers.utils.parseEther(amount.toString())
       );
+
+      const tempObj = {
+        show: true,
+        method: "Transfer",
+        loading: true,
+        txn: txn.hash,
+      };
+
+      setModal(tempObj);
+
+      await txn.wait();
+
+      setModal({
+        ...tempObj,
+        loading: false,
+      });
 
       await fetch(`http://localhost:3000/api/transaction`, {
         method: "PATCH",
@@ -138,9 +192,17 @@ function TransferForm({ setMode }) {
       });
 
       getEventsAndMinters();
+      getContractStates();
+      setIsCalling(false);
     } catch (error) {
-      console.log(error);
-      toast.error("Please Enter a valid address");
+      if (error.reason === "invalid address") toast.info("Invalid Address");
+      else if (
+        error.reason ===
+        "execution reverted: ERC20: transfer amount exceeds balance"
+      )
+        toast.info("Transfer amount exceeds balance");
+      else toast.error(error.reason);
+      setIsCalling(false);
     }
   };
 
@@ -172,7 +234,7 @@ function TransferForm({ setMode }) {
         />
       </div>
 
-      <button type="submit" className={styles.submitBtn}>
+      <button disabled={isCalling} type="submit" className={styles.submitBtn}>
         Transfer HKP
       </button>
     </form>

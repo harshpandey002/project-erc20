@@ -6,11 +6,15 @@ import { ethers } from "ethers";
 
 export default function BurnToken() {
   const [message, setMessage] = useState("");
+  const [isCalling, setIsCalling] = useState(false);
   const {
     createEthereumContract,
-    getEventsAndMinters,
+    getContractStates,
     contractState,
+    getEventsAndMinters,
     account,
+    modal,
+    setModal,
   } = useWalletContext();
 
   const handleBurn = async () => {
@@ -29,7 +33,24 @@ export default function BurnToken() {
     const contractMethods = createEthereumContract();
 
     try {
+      setIsCalling(true);
       const txn = await contractMethods.burn(ethers.utils.parseEther("1"));
+
+      const tempObj = {
+        show: true,
+        method: "Burn",
+        loading: true,
+        txn: txn.hash,
+      };
+
+      setModal(tempObj);
+
+      await txn.wait();
+
+      setModal({
+        ...tempObj,
+        loading: false,
+      });
 
       const res = await fetch(`http://localhost:3000/api/transaction`, {
         method: "PATCH",
@@ -42,13 +63,15 @@ export default function BurnToken() {
         }),
       });
 
-      getEventsAndMinters();
+      const msg = await res.json();
 
-      const data = await res.json();
-      console.log(data);
+      getEventsAndMinters();
+      getContractStates();
+      setIsCalling(false);
       setMessage("data.message");
     } catch (error) {
       console.log(error);
+      setIsCalling(false);
     }
   };
 
@@ -56,7 +79,11 @@ export default function BurnToken() {
     <div className={styles.container}>
       <h2 id="heading">Secret Message</h2>
       {!message && (
-        <div onClick={handleBurn} className={styles.content}>
+        <div
+          style={{ pointerEvents: isCalling ? "none" : "" }}
+          onClick={handleBurn}
+          className={styles.content}
+        >
           <p>
             Click on the area to{" "}
             <span id={styles.action}>Burn 1 HKP Token</span> to see the message
@@ -66,7 +93,7 @@ export default function BurnToken() {
       {message && (
         <div className={styles.message}>
           <p>“{message}”</p>
-          <button onClick={handleBurn} id={styles.burn}>
+          <button disabled={isCalling} onClick={handleBurn} id={styles.burn}>
             Burn more
           </button>
         </div>
