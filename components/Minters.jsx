@@ -10,12 +10,14 @@ export default function Minters() {
 
   return (
     <div className={styles.container}>
-      <h2 id="heading">All Minters</h2>
+      <h2 id="heading">Token Holders</h2>
       <div className={styles.content}>
         {minters.length > 3 && <div id={styles.gry5} />}
-        {minters.map((minter) => (
-          <Card key={minter._id} minter={minter} />
-        ))}
+        {minters
+          .filter((minter) => minter.token)
+          .map((minter) => (
+            <Card key={minter._id} minter={minter} />
+          ))}
       </div>
     </div>
   );

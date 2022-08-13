@@ -90,7 +90,7 @@ export default function TransactionComponent() {
     }
   };
 
-  let ether = (mintAmount * contractState.tokenPrice).toFixed(2);
+  let ether = (mintAmount * contractState.tokenPrice).toFixed(3);
 
   if (mode === "transfer") return <TransferForm setMode={setMode} />;
 

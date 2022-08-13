@@ -5,10 +5,13 @@ import { toast } from "react-toastify";
 
 export default function Copy({ address }) {
   const handleCopy = () => {
-    if (!address) return;
     copy(address);
     toast.info("Address Copied!");
   };
 
-  return <MdContentCopy onClick={handleCopy} className="copyIcon" />;
+  return address ? (
+    <MdContentCopy onClick={handleCopy} className="copyIcon" />
+  ) : (
+    <></>
+  );
 }
