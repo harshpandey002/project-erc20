@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { ethers } from "ethers";
 import { contractABI, contractAddress } from "@/helpers/constants";
 import TxnModal from "@/components/TxnModal";
+import { get } from "mongoose";
 
 export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
@@ -70,7 +71,6 @@ function WalletProvider({ children }) {
 
     setIsWalletConnected(true);
     setAccount(acc);
-    getContractStates();
   };
 
   // ! connectWallet()
@@ -95,8 +95,8 @@ function WalletProvider({ children }) {
         setIsWalletConnected(true);
         setAccount(accounts[0]);
         localStorage.setItem("account", accounts[0]);
-        getContractStates();
       }
+      getContractStates();
     } catch (error) {
       console.log("Error connecting to metamask", error);
       setIsWalletConnected(false);
@@ -113,33 +113,14 @@ function WalletProvider({ children }) {
     try {
       const contractMethods = createEthereumContract();
 
-      const { ethereum } = window;
-
-      let state = null;
-
-      const acc = localStorage.getItem("account");
-
-      if (ethereum && acc) {
-        state = await Promise.all([
-          contractMethods.totalSupply(),
-          contractMethods.maxSupply(),
-          contractMethods.tokenPrice(),
-          contractMethods.balanceOf(ethers.utils.getAddress(acc)),
-        ]);
-      } else {
-        state = await Promise.all([
-          contractMethods.totalSupply(),
-          contractMethods.maxSupply(),
-          contractMethods.tokenPrice(),
-        ]);
-      }
+      const state = await contractMethods.returnState();
 
       setContractState({
-        totalSupply: parseFloat(ethers.utils.formatEther(state[0])),
+        totalSupply: parseFloat(ethers.utils.formatEther(state[2])),
         maxSupply: parseFloat(ethers.utils.formatEther(state[1])),
-        tokenPrice: ethers.utils.formatEther(state[2]),
-        myBalance: state[3]
-          ? parseFloat(ethers.utils.formatEther(state[3]))
+        tokenPrice: ethers.utils.formatEther(state[3]),
+        myBalance: state[0]
+          ? parseFloat(ethers.utils.formatEther(state[0]))
           : 0,
       });
     } catch (error) {
@@ -158,6 +139,7 @@ function WalletProvider({ children }) {
   // ! useEffect()
   useEffect(() => {
     checkConnection();
+    getContractStates();
     getEventsAndMinters();
 
     const { ethereum } = window;

@@ -1,19 +1,18 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract HKPtoken is ERC20, ERC20Burnable {
+contract HKPtoken is ERC20, ERC20Burnable, Ownable  {
 
     uint public tokenPrice;
     uint public maxSupply;
-    address public owner;
-
+    
     constructor() ERC20("HKPtoken", "HKP") {
-         tokenPrice = 10000000000000000;
-         maxSupply = 150000000000000000000;
-         owner = msg.sender;
+        tokenPrice = 2000000000000000;
+        maxSupply = 150000000000000000000;
     }
 
     function mint(uint amount) public payable{
@@ -22,17 +21,20 @@ contract HKPtoken is ERC20, ERC20Burnable {
         _mint(msg.sender, amount);
     }
 
-    function setTokenPrice(uint _tokenPrice) public{
+    function setTokenPrice(uint _tokenPrice) public onlyOwner{
         tokenPrice = _tokenPrice;
     }
 
-    function setMaxSupply(uint _amount) public{
+    function setMaxSupply(uint _amount) public onlyOwner{
         maxSupply= _amount;
     }
 
-    function withdrawEther() public {
-        require(msg.sender == owner, "Only owner can withdraw ether");
-        payable(owner).transfer(address(this).balance);
+    function withdrawEther() public onlyOwner {
+        payable(owner()).transfer(address(this).balance);
+    }
+
+    function returnState() public view returns(uint _myBalance, uint _maxSupply, uint _totalSupply, uint _tokenPrice ){
+        return (balanceOf(msg.sender), maxSupply, totalSupply(), tokenPrice);
     }
 
 }
