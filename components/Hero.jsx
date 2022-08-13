@@ -23,9 +23,9 @@ function Hero() {
           </span>
         </span>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum impedit
-          mollitia possimus voluptatibus consectetur dolore, et sit veritatis
-          corrupti eaque laudantium, delectus aliquam?
+          This is a full-stack web3 project. you can Mint, Transfer and Burn
+          your HKP (Harsh Kumar Pandey) token. This application is built in 5
+          days to apply my knowledge. Thank you so much for checking this out.
         </p>
         {!isWalletConnected && (
           <button onClick={connectWallet} className="btn-hero">

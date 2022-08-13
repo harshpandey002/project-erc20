@@ -25,7 +25,7 @@ export const getEventMessage = (method, amount, to) => {
 
 export const getSecretMessage = () => {
   const secrets = [
-    "If you hire me, I'll switch after 1-2 years for higher salary.",
+    "Throw your cat in the garbage!",
     "I'm DESPERATELY looking for a job right now!!, First thing I'll do once I see 'Congratulation mail' is I'll delete this message from array.",
     "coding.harshp@gmail.com is my email address, hire me!",
     "The Message.",
