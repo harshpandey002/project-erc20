@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 export default function Copy({ address }) {
   const handleCopy = () => {
+    if (!address) return;
     copy(address);
     toast.info("Address Copied!");
   };

@@ -41,7 +41,6 @@ function Hero() {
           </div>
         )}
         <div className={styles.cardContainer}>
-          {/* // TODO Integrate */}
           <div id={styles.gry5} />
           <div id={styles.gry4} />
           <div id={styles.gry2} />

@@ -7,6 +7,7 @@ import {
   contractAddress,
   eventColor,
   formatAddress,
+  getEventMessage,
 } from "@/helpers/constants";
 import moment from "moment";
 
@@ -45,12 +46,17 @@ function Transaction({ event }) {
         >
           {event.method}ed
         </span>{" "}
-        2 HKP Tokens from Smart Contract{" "}
+        {getEventMessage(event.method, event.amount, event.to)}{" "}
         <span className={styles.timestamp}>
           {moment(event.createdAt).startOf("minute").fromNow()}
         </span>
       </p>
-      <a href="#" className={styles.link}>
+      <a
+        href={`https://goerli.etherscan.io/tx/${event.hash}`}
+        target="_blank"
+        rel="noreferrer"
+        className={styles.link}
+      >
         View on Block Explorer
         <GoLinkExternal />
       </a>

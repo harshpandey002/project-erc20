@@ -12,3 +12,13 @@ export const eventColor = {
   Transfer: "#0980C2",
   Burn: "#C71111",
 };
+
+export const getEventMessage = (method, amount, to) => {
+  const eventMsg = {
+    Mint: `${amount} HKP Tokens from Smart Contract`,
+    Transfer: `${amount} HKP Token to ${formatAddress(to)}`,
+    Burn: "1 HKP Token from wallet",
+  };
+
+  return eventMsg[method];
+};

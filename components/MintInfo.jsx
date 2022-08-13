@@ -16,8 +16,12 @@ export default function MintInfo() {
           className={styles.bar}
           style={{ width: (totalSupply / maxSupply) * 100 + "%" }}
         >
-          <span id={styles.arrowUp} />
-          <p id={styles.mintMsg}>{maxSupply - totalSupply} Left</p>
+          {maxSupply && (
+            <>
+              <span id={styles.arrowUp} />
+              <p id={styles.mintMsg}>{maxSupply - totalSupply} Left</p>
+            </>
+          )}
         </div>
         <p className={styles.barInfo} id={styles.infoLeft}>
           {maxSupply} Max Supply
