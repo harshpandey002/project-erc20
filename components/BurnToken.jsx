@@ -13,7 +13,6 @@ export default function BurnToken() {
     contractState,
     getEventsAndMinters,
     account,
-    modal,
     setModal,
   } = useWalletContext();
 
@@ -65,10 +64,12 @@ export default function BurnToken() {
 
       const msg = await res.json();
 
+      console.log(msg);
+
       getEventsAndMinters();
       getContractStates();
       setIsCalling(false);
-      setMessage("data.message");
+      setMessage(msg.message);
     } catch (error) {
       console.log(error);
       setIsCalling(false);
@@ -78,7 +79,15 @@ export default function BurnToken() {
   return (
     <div className={styles.container}>
       <h2 id="heading">Secret Message</h2>
-      {!message && (
+
+      {message ? (
+        <div className={styles.message}>
+          <p>“{message}”</p>
+          <button disabled={isCalling} onClick={handleBurn} id={styles.burn}>
+            Burn more
+          </button>
+        </div>
+      ) : (
         <div
           style={{ pointerEvents: isCalling ? "none" : "" }}
           onClick={handleBurn}
@@ -88,14 +97,6 @@ export default function BurnToken() {
             Click on the area to{" "}
             <span id={styles.action}>Burn 1 HKP Token</span> to see the message
           </p>
-        </div>
-      )}
-      {message && (
-        <div className={styles.message}>
-          <p>“{message}”</p>
-          <button disabled={isCalling} onClick={handleBurn} id={styles.burn}>
-            Burn more
-          </button>
         </div>
       )}
     </div>

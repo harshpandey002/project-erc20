@@ -1,3 +1,4 @@
+import { getSecretMessage } from "@/helpers/constants";
 import initDB from "@/helpers/initDb";
 import Balances from "@/models/Balances";
 import Events from "@/models/Events";
@@ -26,9 +27,6 @@ const updateBalance = async (req, res) => {
     toBalance = await Balances.find({ address: to });
     toBalance = toBalance[0];
   }
-
-  console.log(chalk.blue(fromBalance));
-  console.log(chalk.red(toBalance));
 
   if (method === "Mint") {
     if (!fromBalance) {
@@ -74,6 +72,10 @@ const updateBalance = async (req, res) => {
     amount,
     method,
   }).save();
+
+  if (method === "Burn") {
+    return res.status(200).json({ message: getSecretMessage() });
+  }
 
   return res.status(200).json({ message: "Success" });
 };
