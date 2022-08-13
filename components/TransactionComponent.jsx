@@ -70,7 +70,7 @@ export default function TransactionComponent() {
         loading: false,
       });
 
-      await fetch(`http://localhost:3000/api/transaction`, {
+      await fetch(`${process.env.HOST}/transaction`, {
         method: "PATCH",
         body: JSON.stringify({
           to: txn.to,
