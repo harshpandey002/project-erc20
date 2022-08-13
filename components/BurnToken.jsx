@@ -51,7 +51,7 @@ export default function BurnToken() {
         loading: false,
       });
 
-      const res = await fetch(`${process.env.HOST}/transaction`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_}/transaction`, {
         method: "PATCH",
         body: JSON.stringify({
           to: txn.to,

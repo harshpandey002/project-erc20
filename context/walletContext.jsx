@@ -135,7 +135,7 @@ function WalletProvider({ children }) {
   };
 
   const getEventsAndMinters = async () => {
-    const res = await fetch(`${process.env.HOST}/transaction`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_}/transaction`);
     const data = await res.json();
 
     setEvents(data.events);
