@@ -27,31 +27,35 @@ function WalletProvider({ children }) {
     let contractMethods = null;
     let provider = null;
 
-    const { ethereum } = window;
+    try {
+      const { ethereum } = window;
 
-    const acc = localStorage.getItem("account");
+      const acc = localStorage.getItem("account");
 
-    if (ethereum && acc) {
-      provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      contractMethods = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
-    } else {
-      provider = new ethers.providers.EtherscanProvider(
-        "goerli",
-        "2TBC8DFX2KC651Q7XYNIS2GWKA4SX9YPFX"
-      );
-      contractMethods = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        provider
-      );
+      if (ethereum && acc) {
+        provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        contractMethods = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+      } else {
+        provider = new ethers.providers.EtherscanProvider(
+          "goerli",
+          "2TBC8DFX2KC651Q7XYNIS2GWKA4SX9YPFX"
+        );
+        contractMethods = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          provider
+        );
+      }
+
+      return contractMethods;
+    } catch (error) {
+      console.log(error);
     }
-
-    return contractMethods;
   };
 
   // ! getProvider()
@@ -102,7 +106,6 @@ function WalletProvider({ children }) {
       setIsWalletConnected(false);
       setAccount(null);
       localStorage.removeItem("account");
-      console.log(error.code === -32002);
       if (error.code === -32002)
         toast.info("Some error occured, please open metamask manually");
     }
@@ -116,15 +119,19 @@ function WalletProvider({ children }) {
       const state = await contractMethods.returnState();
 
       setContractState({
-        totalSupply: parseFloat(ethers.utils.formatEther(state[2])),
-        maxSupply: parseFloat(ethers.utils.formatEther(state[1])),
-        tokenPrice: ethers.utils.formatEther(state[3]),
         myBalance: state[0]
           ? parseFloat(ethers.utils.formatEther(state[0]))
           : 0,
+        maxSupply: parseFloat(ethers.utils.formatEther(state[1])),
+        totalSupply: parseFloat(ethers.utils.formatEther(state[2])),
+        tokenPrice: ethers.utils.formatEther(state[3]),
       });
     } catch (error) {
       console.log(error);
+      if (error.code === "UNSUPPORTED_OPERATION") {
+        localStorage.removeItem("account");
+        location.reload();
+      }
     }
   };
 
