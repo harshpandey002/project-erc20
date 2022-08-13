@@ -36,6 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .block:hover {
@@ -66,4 +67,23 @@
 
 .contract {
   margin-top: 16px;
+}
+
+.link {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.block:hover .link {
+  opacity: 1;
+}
+
+@media only screen and (max-width: 800px) {
+  .block {
+    background-color: #0d0d0d;
+  }
+
+  .link {
+    display: none;
+  }
 }

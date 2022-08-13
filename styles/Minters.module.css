@@ -126,3 +126,30 @@
 .cardRight img {
   width: 75px;
 }
+
+@media only screen and (max-width: 650px) {
+  .cardContainer {
+    width: 200px;
+    height: 130px;
+  }
+
+  .cardRight {
+    margin-right: 0;
+  }
+
+  .cardRight img {
+    width: 50px;
+  }
+
+  .cardLeft h3 {
+    font-size: 16px;
+  }
+
+  .cardLeft h2 {
+    font-size: 24px;
+  }
+
+  .cardLeft p {
+    font-size: 10px;
+  }
+}

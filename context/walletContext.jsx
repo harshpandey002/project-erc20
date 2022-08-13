@@ -136,7 +136,8 @@ function WalletProvider({ children }) {
   };
 
   const getEventsAndMinters = async () => {
-    const res = await fetch("http://localhost:3000/api/transaction");
+    const res = await fetch("http://192.168.29.6:3000/api/transaction");
+    // const res = await fetch("http://localhost:3000/api/transaction");
     const data = await res.json();
 
     setEvents(data.events);

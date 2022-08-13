@@ -107,7 +107,6 @@
   height: 200px;
   border-radius: 50%;
   z-index: 1;
-  background-color: #284ca5;
 }
 
 #gry1 {
@@ -196,4 +195,49 @@
   margin-right: 1rem;
   display: flex;
   align-items: center;
+}
+
+@media only screen and (max-width: 800px) {
+  .container {
+    gap: 3rem;
+    margin-top: 1rem;
+  }
+
+  .heading {
+    margin-top: 0;
+    order: 2;
+  }
+
+  .heading h1 {
+    font-size: 20px;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .form {
+    order: 2;
+  }
+
+  #gry1,
+  #gry2,
+  #gry3,
+  #gry4 {
+    width: 160px;
+    height: 160px;
+  }
+
+  .cardContainer {
+    width: 320px;
+    height: 200px;
+  }
+
+  .cardLeft h2 {
+    font-size: 32px;
+  }
+
+  .cardRight img {
+    width: 80px;
+  }
 }

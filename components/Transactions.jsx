@@ -21,6 +21,15 @@ export default function Transactions() {
         {events.map((event) => (
           <Transaction key={event._id} event={event} />
         ))}
+        {events.map((event) => (
+          <Transaction key={event._id} event={event} />
+        ))}
+        {events.map((event) => (
+          <Transaction key={event._id} event={event} />
+        ))}
+        {events.map((event) => (
+          <Transaction key={event._id} event={event} />
+        ))}
       </div>
       <a
         href={`https://goerli.etherscan.io/address/${contractAddress}`}
@@ -37,7 +46,12 @@ export default function Transactions() {
 
 function Transaction({ event }) {
   return (
-    <div className={styles.block}>
+    <div
+      onClick={() =>
+        window.open(`https://goerli.etherscan.io/tx/${event.hash}`, "_blank")
+      }
+      className={styles.block}
+    >
       <p className={styles.action}>
         {formatAddress(event.from)}{" "}
         <span
@@ -51,15 +65,10 @@ function Transaction({ event }) {
           {moment(event.createdAt).startOf("minute").fromNow()}
         </span>
       </p>
-      <a
-        href={`https://goerli.etherscan.io/tx/${event.hash}`}
-        target="_blank"
-        rel="noreferrer"
-        className={styles.link}
-      >
+      <p className={styles.link}>
         View on Block Explorer
         <GoLinkExternal />
-      </a>
+      </p>
     </div>
   );
 }

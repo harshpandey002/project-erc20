@@ -10,7 +10,7 @@
   margin-top: 2rem;
   height: 80vh;
   max-height: 280px;
-  border: 2px solid #060606;
+  border: 2px solid #292929;
   background-color: #030303;
   border-radius: 10px;
   display: flex;
@@ -34,6 +34,7 @@
 
 .content p {
   font-style: italic;
+  text-align: center;
   font-size: 20px;
   font-weight: 400;
   color: #222222;
@@ -72,4 +73,16 @@
 
 #burn:hover {
   background-color: #090909;
+}
+
+@media only screen and (max-width: 650px) {
+  .content {
+    height: 200px;
+
+    padding: 1rem;
+  }
+
+  .content p {
+    font-size: 16px;
+  }
 }

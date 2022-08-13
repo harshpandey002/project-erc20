@@ -53,3 +53,30 @@
   border-right: 5px solid transparent;
   border-bottom: 5px solid #ffffff;
 }
+
+@media only screen and (max-width: 650px) {
+  .barWrapper {
+    width: 80%;
+  }
+
+  .barInfo {
+    top: initial;
+    bottom: 130%;
+    transform: translateY(0);
+    font-size: 12px;
+  }
+
+  #infoRight {
+    left: 1%;
+  }
+
+  #infoLeft {
+    left: initial;
+    right: 0%;
+  }
+
+  #mintMsg {
+    top: 180%;
+    font-size: 12px;
+  }
+}
