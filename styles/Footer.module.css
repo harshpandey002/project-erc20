@@ -5,6 +5,8 @@
   justify-content: space-between;
   padding: 2rem 4rem;
   z-index: 2;
+  background-color: #0707078e;
+  border-top: 2px solid #252525;
 }
 
 .logo h1 {
@@ -20,8 +22,7 @@
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  font-size: 20px;
+  gap: 1rem;
   font-weight: 300;
   color: white;
 }
@@ -31,17 +32,20 @@
 }
 
 .icons {
+  font-size: 1.4rem;
   pointer-events: none;
 }
 
 @media only screen and (max-width: 800px) {
   .container {
-    padding: 1.5rem 0;
-    justify-content: center;
+    padding: 1.5rem 2rem;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
   }
 
-  /* .links {
-    display: none;
-  } */
+  .links {
+    gap: 12px;
+    align-items: flex-start;
+  }
 }

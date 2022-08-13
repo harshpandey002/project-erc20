@@ -1,10 +1,9 @@
-import React from "react";
-import styles from "@/styles/Navbar.module.css";
+import styles from "@/styles/Footer.module.css";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { CgFigma } from "react-icons/cg";
 import { DiYeoman } from "react-icons/di";
 
-export default function Navbar() {
+export default function Footer() {
   const handleClick = (e) => {
     const link = e.target.getAttribute("name");
 

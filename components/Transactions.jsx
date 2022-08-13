@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styles from "@/styles/Transactions.module.css";
 import { GoLinkExternal } from "react-icons/go";
-import { ethers } from "ethers";
 import { useWalletContext } from "context/walletContext";
 import {
   contractAddress,
@@ -18,15 +17,6 @@ export default function Transactions() {
     <div className={styles.container}>
       <h2 id="heading">Transaction Logs</h2>
       <div className={styles.content}>
-        {events.map((event) => (
-          <Transaction key={event._id} event={event} />
-        ))}
-        {events.map((event) => (
-          <Transaction key={event._id} event={event} />
-        ))}
-        {events.map((event) => (
-          <Transaction key={event._id} event={event} />
-        ))}
         {events.map((event) => (
           <Transaction key={event._id} event={event} />
         ))}

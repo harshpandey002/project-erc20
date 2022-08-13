@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { ethers } from "ethers";
 import { contractABI, contractAddress } from "@/helpers/constants";
 import TxnModal from "@/components/TxnModal";
-import { get } from "mongoose";
 
 export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
@@ -43,7 +42,7 @@ function WalletProvider({ children }) {
       } else {
         provider = new ethers.providers.EtherscanProvider(
           "goerli",
-          "2TBC8DFX2KC651Q7XYNIS2GWKA4SX9YPFX"
+          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY
         );
         contractMethods = new ethers.Contract(
           contractAddress,
@@ -136,8 +135,8 @@ function WalletProvider({ children }) {
   };
 
   const getEventsAndMinters = async () => {
-    const res = await fetch("http://192.168.29.6:3000/api/transaction");
-    // const res = await fetch("http://localhost:3000/api/transaction");
+    // const res = await fetch("http://192.168.29.6:3000/api/transaction");
+    const res = await fetch("http://localhost:3000/api/transaction");
     const data = await res.json();
 
     setEvents(data.events);
