@@ -42,7 +42,7 @@ function WalletProvider({ children }) {
       } else {
         provider = new ethers.providers.EtherscanProvider(
           "goerli",
-          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY
+          process.env.NEXT_PUBLIC_HOSTETHERSCAN_API_KEY
         );
         contractMethods = new ethers.Contract(
           contractAddress,
@@ -135,7 +135,7 @@ function WalletProvider({ children }) {
   };
 
   const getEventsAndMinters = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_}/transaction`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/transaction`);
     const data = await res.json();
 
     setEvents(data.events);

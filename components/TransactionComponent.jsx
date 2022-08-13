@@ -70,7 +70,7 @@ export default function TransactionComponent() {
         loading: false,
       });
 
-      await fetch(`${process.env.NEXT_PUBLIC_}/transaction`, {
+      await fetch(`${process.env.NEXT_PUBLIC_HOST}/transaction`, {
         method: "PATCH",
         body: JSON.stringify({
           to: txn.to,
