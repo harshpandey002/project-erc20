@@ -7,7 +7,7 @@ import { formatAddress } from "@/helpers/constants";
 import Copy from "./Copy";
 
 function Hero() {
-  const { currentAccount, connectWallet, contractState } = useWalletContext();
+  const { accountRef, connectWallet, contractState } = useWalletContext();
 
   return (
     <div className={styles.container}>
@@ -26,7 +26,7 @@ function Hero() {
           your HKP (Harsh Kumar Pandey) token. This application is built in 5
           days to apply my knowledge. Thank you so much for checking this out.
         </p>
-        {!currentAccount && (
+        {!accountRef.current && (
           <button onClick={connectWallet} className="btn-hero">
             <img id="walletIcon" src="metamask-icon.svg" alt="hey" />
             Connect Wallet
@@ -34,7 +34,7 @@ function Hero() {
         )}
       </div>
       <div className={styles.content}>
-        {currentAccount && (
+        {accountRef.current && (
           <div className={styles.form}>
             <TransactionComponent />
           </div>
@@ -48,12 +48,12 @@ function Hero() {
           <div className={styles.card}>
             <div className={styles.cardLeft}>
               <h3>Ethereum</h3>
-              <h2>{currentAccount ? contractState.myBalance : 0} HKP</h2>
+              <h2>{accountRef.current ? contractState.myBalance : 0} HKP</h2>
               <p className="address">
-                {currentAccount
-                  ? formatAddress(currentAccount)
+                {accountRef.current
+                  ? formatAddress(accountRef.current)
                   : "Connect you wallet"}
-                <Copy address={currentAccount} />
+                <Copy address={accountRef.current} />
               </p>
             </div>
             <div className={styles.cardRight}>

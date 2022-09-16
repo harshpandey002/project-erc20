@@ -12,14 +12,14 @@ export default function BurnToken() {
     getContractStates,
     contractState,
     getEventsAndMinters,
-    currentAccount,
+    accountRef,
     setModal,
   } = useWalletContext();
 
   const handleBurn = async () => {
     setMessage("");
 
-    if (!currentAccount) {
+    if (!accountRef.current) {
       toast.info("You need to install Metamask.");
       return;
     }
@@ -55,7 +55,7 @@ export default function BurnToken() {
         method: "PATCH",
         body: JSON.stringify({
           to: txn.to,
-          amount: 1,
+          amount: parseInt(1),
           hash: txn.hash,
           from: txn.from,
           method: "Burn",
