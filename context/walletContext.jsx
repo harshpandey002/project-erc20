@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 import { ethers } from "ethers";
@@ -9,7 +9,6 @@ export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
 
 function WalletProvider({ children }) {
-  const [currentAccount, setCurrentAccount] = useState(null);
   const [contractState, setContractState] = useState({});
   const [events, setEvents] = useState([]);
   const [minters, setMinters] = useState([]);
@@ -19,6 +18,7 @@ function WalletProvider({ children }) {
     loading: true,
     txn: "",
   });
+  const accountRef = useRef();
 
   // ! createEthereumContract()
   const createEthereumContract = () => {
@@ -28,7 +28,7 @@ function WalletProvider({ children }) {
     try {
       const { ethereum } = window;
 
-      if (ethereum && currentAccount) {
+      if (ethereum && accountRef.current) {
         provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         contractMethods = new ethers.Contract(
@@ -97,7 +97,7 @@ function WalletProvider({ children }) {
         method: "eth_accounts",
       });
 
-      setCurrentAccount(accounts[0]);
+      accountRef.current = accounts[0];
 
       try {
         await window.ethereum.request({
@@ -132,7 +132,7 @@ function WalletProvider({ children }) {
         method: "eth_requestAccounts",
       });
 
-      setCurrentAccount(accounts[0]);
+      accountRef.current = accounts[0];
       getContractStates();
     } catch (error) {
       console.log(error);
@@ -192,9 +192,9 @@ function WalletProvider({ children }) {
 
   const handleDisconnect = (accounts) => {
     if (accounts.length == 0) {
-      setCurrentAccount("");
+      accountRef.current = undefined;
     } else {
-      setCurrentAccount(accounts[0]);
+      accountRef.current = accounts[0];
     }
   };
 
@@ -204,7 +204,7 @@ function WalletProvider({ children }) {
   };
 
   const contextValue = {
-    currentAccount,
+    accountRef,
     connectWallet,
     createEthereumContract,
     getContractStates,

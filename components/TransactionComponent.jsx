@@ -22,7 +22,7 @@ export default function TransactionComponent() {
   const handleChange = (e) => {
     if (e.target.value < 0) return;
     if (e.target.value > 150) return;
-    setMintAmount(e.target.value);
+    setMintAmount(parseInt(e.target.value));
   };
 
   const handleDecrement = () => {
@@ -74,7 +74,7 @@ export default function TransactionComponent() {
         method: "PATCH",
         body: JSON.stringify({
           to: txn.to,
-          amount: mintAmount,
+          amount: parseInt(mintAmount),
           hash: txn.hash,
           from: txn.from,
           method: "Mint",
@@ -141,7 +141,7 @@ function TransferForm({ setMode }) {
     createEthereumContract,
     getContractStates,
     getEventsAndMinters,
-    currentAccount,
+    accountRef,
     setModal,
   } = useWalletContext();
 
@@ -228,7 +228,8 @@ function TransferForm({ setMode }) {
       </div>
       <div className={styles.transfer}>
         <p className="address">
-          From {formatAddress(currentAccount)} <Copy address={currentAccount} />{" "}
+          From {formatAddress(accountRef.current)}{" "}
+          <Copy address={accountRef.current} />{" "}
         </p>
         <input
           value={to}
