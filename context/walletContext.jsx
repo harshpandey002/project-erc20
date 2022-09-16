@@ -9,8 +9,7 @@ export const walletContext = createContext();
 export const useWalletContext = () => useContext(walletContext);
 
 function WalletProvider({ children }) {
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [account, setAccount] = useState(null);
+  const [currentAccount, setCurrentAccount] = useState(null);
   const [contractState, setContractState] = useState({});
   const [events, setEvents] = useState([]);
   const [minters, setMinters] = useState([]);
@@ -29,9 +28,7 @@ function WalletProvider({ children }) {
     try {
       const { ethereum } = window;
 
-      const acc = localStorage.getItem("account");
-
-      if (ethereum && acc) {
+      if (ethereum && currentAccount) {
         provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         contractMethods = new ethers.Contract(
@@ -42,7 +39,7 @@ function WalletProvider({ children }) {
       } else {
         provider = new ethers.providers.EtherscanProvider(
           "goerli",
-          process.env.NEXT_PUBLIC_HOSTETHERSCAN_API_KEY
+          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY
         );
         contractMethods = new ethers.Contract(
           contractAddress,
@@ -64,49 +61,81 @@ function WalletProvider({ children }) {
     return provider;
   };
 
-  // ! checkConnection()
+  const addNetwork = async () => {
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: `0x${Number(5).toString(16)}`,
+            chainName: "Görli",
+            nativeCurrency: {
+              name: "Görli Ether",
+              symbol: "ETH",
+              decimals: 18,
+            },
+            rpcUrls: [
+              "https://goerli.infura.io/v3/${INFURA_API_KEY}",
+              "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
+              "https://rpc.goerli.mudit.blog/",
+            ],
+            blockExplorerUrls: ["https://goerli.etherscan.io"],
+          },
+        ],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const checkConnection = async () => {
-    const { ethereum } = window;
-    if (!ethereum) return;
+    try {
+      const { ethereum } = window;
+      if (!ethereum) return;
 
-    const acc = localStorage.getItem("account");
-    if (!acc) return;
+      const accounts = await ethereum.request({
+        method: "eth_accounts",
+      });
 
-    setIsWalletConnected(true);
-    setAccount(acc);
+      setCurrentAccount(accounts[0]);
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `0x${Number(5).toString(16)}` }],
+        });
+      } catch (error) {
+        console.log(error);
+
+        if (error.code === 4902) {
+          addNetwork();
+        }
+
+        if (error.code === -32002) {
+          toast.info("Open Metamask");
+        }
+      }
+
+      getContractStates();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // ! connectWallet()
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
-
-      if (!ethereum) {
-        toast.info("Please install Metamask");
-        return;
-      }
+      if (!ethereum) return;
 
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
 
-      if (!accounts.length) {
-        setIsWalletConnected(false);
-        setAccount(null);
-        localStorage.removeItem("account");
-      } else {
-        setIsWalletConnected(true);
-        setAccount(accounts[0]);
-        localStorage.setItem("account", accounts[0]);
-      }
+      setCurrentAccount(accounts[0]);
       getContractStates();
     } catch (error) {
-      console.log("Error connecting to metamask", error);
-      setIsWalletConnected(false);
-      setAccount(null);
-      localStorage.removeItem("account");
-      if (error.code === -32002)
-        toast.info("Some error occured, please open metamask manually");
+      console.log(error);
     }
   };
 
@@ -128,7 +157,6 @@ function WalletProvider({ children }) {
     } catch (error) {
       console.log(error);
       if (error.code === "UNSUPPORTED_OPERATION") {
-        localStorage.removeItem("account");
         location.reload();
       }
     }
@@ -145,7 +173,6 @@ function WalletProvider({ children }) {
   // ! useEffect()
   useEffect(() => {
     checkConnection();
-    getContractStates();
     getEventsAndMinters();
 
     const { ethereum } = window;
@@ -153,11 +180,31 @@ function WalletProvider({ children }) {
     window.ethereum.on("accountsChanged", function () {
       connectWallet();
     });
+
+    ethereum.on("chainChanged", handleChainChanged);
+    ethereum.on("accountsChanged", handleDisconnect);
+    // Cleanup of listener on unmount
+    return () => {
+      ethereum.removeListener("chainChanged", handleChainChanged);
+      ethereum.removeListener("accountsChanged", handleDisconnect);
+    };
   }, []);
 
+  const handleDisconnect = (accounts) => {
+    if (accounts.length == 0) {
+      setCurrentAccount("");
+    } else {
+      setCurrentAccount(accounts[0]);
+    }
+  };
+
+  const handleChainChanged = (chainId) => {
+    if (chainId == "0x5") return; // chain id is received in hexadecimal
+    window.location.reload();
+  };
+
   const contextValue = {
-    isWalletConnected,
-    account,
+    currentAccount,
     connectWallet,
     createEthereumContract,
     getContractStates,

@@ -141,7 +141,7 @@ function TransferForm({ setMode }) {
     createEthereumContract,
     getContractStates,
     getEventsAndMinters,
-    account,
+    currentAccount,
     setModal,
   } = useWalletContext();
 
@@ -228,7 +228,7 @@ function TransferForm({ setMode }) {
       </div>
       <div className={styles.transfer}>
         <p className="address">
-          From {formatAddress(account)} <Copy address={account} />{" "}
+          From {formatAddress(currentAccount)} <Copy address={currentAccount} />{" "}
         </p>
         <input
           value={to}

@@ -22,6 +22,6 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: process.env.NEXT_PUBLIC_HOSTETHERSCAN_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
   },
 };
